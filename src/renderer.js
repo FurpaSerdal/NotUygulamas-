@@ -1,6 +1,7 @@
 const addNoteBtn = document.getElementById('addNoteBtn');
 const notesList = document.getElementById('notesList');
 
+
 addNoteBtn.addEventListener('click', addNote);
 
 // Notları listelemek
@@ -8,33 +9,57 @@ function loadNotes() {
   fetch('http://localhost:3000/notes')
     .then(response => response.json())
     .then(data => {
-      notesList.innerHTML = '';
-      data.forEach(note => {
-        const li = document.createElement('li');
-        li.textContent = `${note.baslik}: ${note.icerik}`;
-        
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Sil';
-        deleteBtn.classList.add('btn', 'btn-sm', 'btn-danger', 'ms-2');
-        deleteBtn.onclick = () => deleteNote(note.id);
+      notesList.innerHTML = `
+        <table class="table table-hover table-striped">
+          <thead class="table-primary">
+            <tr>
+              <th>#</th>
+              <th>Başlık</th>
+              <th>İçerik</th>
+              <th>Tarih</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="notesTableBody"></tbody>
+        </table>
+      `;
 
-        li.appendChild(deleteBtn);
-        notesList.appendChild(li);
+      const notesTableBody = document.getElementById('notesTableBody');
+
+      data.forEach((note, index) => {
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${note.baslik}</td>
+          <td>${note.icerik}</td>
+          <td>${note.tarih}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteNote(${note.id})">
+              🗑️ Sil
+            </button>
+          </td>
+        `;
+
+        notesTableBody.appendChild(tr);
       });
+
     })
     .catch(error => console.error('Hata:', error));
 }
 
 // Not eklemek
 function addNote() {
+  console.log("calıs")
   const baslik = document.getElementById('baslik').value;
   const icerik = document.getElementById('icerik').value;
+  const tarih = new Date().toISOString(); // Tarihi doğru şekilde alıyoruz
   
-  if (baslik && icerik) {
+  if (baslik && icerik && tarih) {
     fetch('http://localhost:3000/add-note', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ baslik, icerik }) // not değil, icerik
+      body: JSON.stringify({ baslik, icerik, tarih }) // Doğru tarih formatında gönderiyoruz
     })
       .then(response => response.json())
       .then(() => {
@@ -54,6 +79,11 @@ function deleteNote(id) {
     .then(() => loadNotes())
     .catch(error => console.error('Hata:', error));
 }
+
+document.getElementById('openModelBtn').addEventListener('click', function (e) {
+  e.preventDefault();
+  window.api.openModelWindow();  // api üzerinden openModelWindow fonksiyonunu çağırıyoruz
+})
 
 // Sayfa yüklendiğinde notları getir
 window.onload = loadNotes;
