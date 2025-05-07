@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>📘 Notlar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-primary fw-bold">📘 Notlar</h2>
+      <button id="Model" class="btn btn-outline-secondary">🏠 Ana Sayfaya Dön</button>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <table class="table table-hover align-middle" id="notesTable">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 50px;">#</th>
+              <th>Başlık</th>
+              <th>İçerik</th>
+              <th style="width: 160px;">İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Notlar buraya JS ile eklenecek -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Node.js işlemleri -->
+  <script>
+    const tbody = document.querySelector('#notesTable tbody');
+
+    // Notları yükle
+    function loadNotes() {
+      fetch('http://localhost:3000/notes')
+        .then(response => response.json())
+        .then(data => {
+          tbody.innerHTML = ''; // Tablodaki eski notları temizle
+          data.forEach((note, index) => {
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+              <td>${index + 1}</td>
+              <td><strong>${note.baslik}</strong></td>
+              <td>${note.icerik}</td>
+              <td>
+                <button class="btn btn-sm btn-danger" onclick="deleteNote(${note.id})">🗑️ Sil</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(error => console.error('Hata:', error));
+    }
+
+    // Not silme
+    function deleteNote(id) {
+      if (confirm('Bu notu silmek istediğinizden emin misiniz?')) {
+        fetch(`http://localhost:3000/delete-note/${id}`, { method: 'DELETE' })
+          .then(() => loadNotes())
+          .catch(error => console.error('Hata:', error));
+      }
+    }
+
+    // Not düzenleme
+    function editNote(id) {
+      const newTitle = prompt('Yeni Başlık:');
+      const newContent = prompt('Yeni İçerik:');
+      
+      if (newTitle && newContent) {
+        fetch(`http://localhost:3000/update-note/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ baslik: newTitle, icerik: newContent })
+        })
+          .then(() => loadNotes())
+          .catch(error => console.error('Hata:', error));
+      }
+    }
+
+    // Ana sayfaya dönüş
+    document.getElementById('Model').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    // Sayfa yüklendiğinde notları yükle
+    loadNotes();
+  </script>
+</body>
+</html>

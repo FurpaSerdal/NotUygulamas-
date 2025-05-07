@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notlar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <!-- Başlık ve yönlendirme butonu -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="fw-bold text-primary">📝 Notlar</h1>
+      <a class="btn btn-outline-primary" id="openModelBtn" href="#">📄 Notlarım</a>
+    </div>
+
+    <!-- Not ekleme formu -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Yeni Not Ekle</h5>
+
+        <div class="mb-3">
+          <label for="baslik" class="form-label">Başlık</label>
+          <input type="text" id="baslik" class="form-control" placeholder="Örneğin: Alışveriş Listesi" />
+        </div>
+
+        <div class="mb-3">
+          <label for="icerik" class="form-label">Not</label>
+          <textarea id="icerik" class="form-control" rows="4" placeholder="Detayları yazın..."></textarea>
+        </div>
+
+        <button id="addNoteBtn" class="btn btn-success w-100">➕ Not Ekle</button>
+      </div>
+    </div>
+
+    <!-- Not listesi -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">📋 Notlarım</h5>
+        <ul id="notesList" class="list-group list-group-flush mt-3"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+  <!-- Notlarım sayfasına yönlendirme -->
+  <script>
+    document.getElementById('openModelBtn').addEventListener('click', function (e) {
+      e.preventDefault();
+      window.location.href = 'model.html';
+    });
+  </script>
+
+  <!-- renderer.js -->
+  <script src="renderer.js"></script>
+
+</body>
+</html>
