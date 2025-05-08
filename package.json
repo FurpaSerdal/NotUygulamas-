@@ -1,0 +1,59 @@
+{
+  "name": "sqlitennnote",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "dist": "electron-builder",
+    "build": "electron-packager . NotUygulamasi --platform=win32 --arch=x64 --overwrite"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.5"
+  },
+  "devDependencies": {
+    "electron": "^36.1.0",
+    "electron-builder": "^24.13.3",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.example.sqlitennnote",
+    "productName": "NotApp",
+    "files": [
+      "**/*",
+      "!database.db", 
+
+      "main.js",
+      "src/**/*",
+      "src/model/**/*",   
+      "node_modules/**/*"
+      
+    ],
+    "extraResources": [
+      {
+        "from": "database.db",
+        "to": "database.db"
+      }
+    ],
+    "asarUnpack": [
+      "**/node_modules/sqlite3/**"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/Vexels-Office-Notepad.512.ico"
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "src/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "src/icon.png"
+    }
+  }
+}
